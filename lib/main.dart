@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/constants/app_theme.dart';
 import 'data/repositories/crypto_repository.dart';
-import 'data/repositories/mock_crypto_repository.dart';
+import 'data/repositories/api_crypto_repository.dart';
 import 'data/repositories/watchlist_repository.dart';
 import 'presentation/bloc/theme/theme_cubit.dart';
 import 'presentation/bloc/market/market_cubit.dart';
@@ -17,7 +17,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
 
-  final CryptoRepository cryptoRepository = MockCryptoRepository();
+  // Instantiate REST API repository connecting to Python FastAPI backend
+  final CryptoRepository cryptoRepository = ApiCryptoRepository();
   final WatchlistRepository watchlistRepository = WatchlistRepository(prefs);
 
   runApp(

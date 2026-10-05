@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../bloc/market/market_state.dart';
 
 class SortBottomSheet extends StatelessWidget {
@@ -48,10 +49,7 @@ class SortBottomSheet extends StatelessWidget {
                 children: [
                   const Text(
                     'Sort Cryptocurrencies',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
@@ -167,7 +165,10 @@ class SortBottomSheet extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text('Apply Sorting', style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    'Apply Sorting',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
               SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 12),
@@ -193,24 +194,38 @@ class SortBottomSheet extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
       decoration: BoxDecoration(
-        color: isSelected ? theme.colorScheme.primary.withValues(alpha: 0.12) : Colors.transparent,
+        color: isSelected
+            ? theme.colorScheme.primary.withValues(alpha: 0.12)
+            : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isSelected ? theme.colorScheme.primary : theme.colorScheme.outline.withValues(alpha: 0.5),
+          color: isSelected
+              ? theme.colorScheme.primary
+              : theme.colorScheme.outline.withValues(alpha: 0.5),
         ),
       ),
       child: ListTile(
-        leading: Icon(icon, color: isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurface),
+        leading: Icon(
+          icon,
+          color: isSelected
+              ? theme.colorScheme.primary
+              : theme.colorScheme.onSurface,
+        ),
         title: Text(
           title,
           style: TextStyle(
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-            color: isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurface,
+            color: isSelected
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurface,
           ),
         ),
         subtitle: Text(
           subtitle,
-          style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+          style: TextStyle(
+            fontSize: 12,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+          ),
         ),
         trailing: isSelected
             ? Icon(Icons.check_circle_rounded, color: theme.colorScheme.primary)

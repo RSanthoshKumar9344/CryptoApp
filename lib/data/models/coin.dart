@@ -73,21 +73,31 @@ class Coin extends Equatable {
   }
 
   factory Coin.fromJson(Map<String, dynamic> json) {
+    final image = json['imageUrl'] ?? json['image_url'] ?? json['image'];
+    final price = json['currentPrice'] ?? json['current_price'] ?? 0.0;
+    final change24h =
+        json['priceChangePercentage24h'] ??
+        json['price_change_percentage_24h'] ??
+        0.0;
+    final mCap = json['marketCap'] ?? json['market_cap'] ?? 0.0;
+    final mRank = json['marketCapRank'] ?? json['market_cap_rank'] ?? 0;
+    final volume = json['totalVolume'] ?? json['total_volume'] ?? 0.0;
+    final cSupply =
+        json['circulatingSupply'] ?? json['circulating_supply'] ?? 0.0;
+    final tSupply = json['totalSupply'] ?? json['total_supply'];
+
     return Coin(
-      id: json['id'] as String,
-      symbol: json['symbol'] as String,
-      name: json['name'] as String,
-      imageUrl: json['imageUrl'] as String?,
-      currentPrice: (json['currentPrice'] as num).toDouble(),
-      priceChangePercentage24h: (json['priceChangePercentage24h'] as num)
-          .toDouble(),
-      marketCap: (json['marketCap'] as num).toDouble(),
-      marketCapRank: (json['marketCapRank'] as num).toInt(),
-      totalVolume: (json['totalVolume'] as num).toDouble(),
-      circulatingSupply: (json['circulatingSupply'] as num).toDouble(),
-      totalSupply: json['totalSupply'] != null
-          ? (json['totalSupply'] as num).toDouble()
-          : null,
+      id: json['id'] as String? ?? '',
+      symbol: (json['symbol'] as String? ?? '').toUpperCase(),
+      name: json['name'] as String? ?? '',
+      imageUrl: image as String?,
+      currentPrice: (price as num).toDouble(),
+      priceChangePercentage24h: (change24h as num).toDouble(),
+      marketCap: (mCap as num).toDouble(),
+      marketCapRank: (mRank as num).toInt(),
+      totalVolume: (volume as num).toDouble(),
+      circulatingSupply: (cSupply as num).toDouble(),
+      totalSupply: tSupply != null ? (tSupply as num).toDouble() : null,
     );
   }
 

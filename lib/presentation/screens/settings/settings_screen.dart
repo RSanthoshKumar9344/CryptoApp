@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../data/repositories/crypto_repository.dart';
+import '../../../data/repositories/api_crypto_repository.dart';
 import '../../bloc/theme/theme_cubit.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -10,6 +12,9 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeMode = context.watch<ThemeCubit>().state;
     final theme = Theme.of(context);
+    final repo = context.watch<CryptoRepository>();
+    final isApiRepo = repo is ApiCryptoRepository;
+    final baseUrl = isApiRepo ? repo.baseUrl : 'Local Mock Repository';
 
     return Scaffold(
       body: SafeArea(
@@ -98,16 +103,27 @@ class SettingsScreen extends StatelessWidget {
                       context: context,
                       icon: Icons.storage_rounded,
                       title: 'Data Source',
-                      value: 'Mock Data',
+                      value: isApiRepo ? 'FastAPI REST API' : 'Mock Data',
                     ),
                     const Divider(height: 1),
                     _buildInfoTile(
                       context: context,
-                      icon: Icons.cloud_off_rounded,
+                      icon: isApiRepo
+                          ? Icons.cloud_done_rounded
+                          : Icons.cloud_off_rounded,
                       title: 'Backend Status',
-                      value: 'Not Connected',
-                      valueColor: Colors.amber,
+                      value: isApiRepo ? 'Connected' : 'Mock Mode',
+                      valueColor: isApiRepo ? Colors.green : Colors.amber,
                     ),
+                    if (isApiRepo) ...[
+                      const Divider(height: 1),
+                      _buildInfoTile(
+                        context: context,
+                        icon: Icons.link_rounded,
+                        title: 'API Base URL',
+                        value: baseUrl,
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -168,7 +184,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Production-ready client frontend architecture designed for clean separation of concerns and seamless future REST/FastAPI integration.',
+                      'Production-ready client frontend architecture connected to Python FastAPI REST API endpoints.',
                       style: TextStyle(
                         fontSize: 13,
                         height: 1.4,
@@ -247,12 +263,16 @@ class SettingsScreen extends StatelessWidget {
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
           const Spacer(),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: valueColor ?? theme.colorScheme.primary,
+          Flexible(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: valueColor ?? theme.colorScheme.primary,
+              ),
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.end,
             ),
           ),
         ],

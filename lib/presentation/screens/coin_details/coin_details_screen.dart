@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../bloc/coin_details/coin_details_cubit.dart';
 import '../../bloc/coin_details/coin_details_state.dart';
 import '../../bloc/watchlist/watchlist_cubit.dart';
@@ -19,10 +20,7 @@ import 'widgets/chart_period_selector.dart';
 class CoinDetailsScreen extends StatelessWidget {
   final String coinId;
 
-  const CoinDetailsScreen({
-    super.key,
-    required this.coinId,
-  });
+  const CoinDetailsScreen({super.key, required this.coinId});
 
   @override
   Widget build(BuildContext context) {
@@ -41,20 +39,28 @@ class CoinDetailsScreen extends StatelessWidget {
               final coin = state.details!.coin;
               return Row(
                 children: [
-                  CryptoLogo(symbol: coin.symbol, imageUrl: coin.imageUrl, size: 32),
+                  CryptoLogo(
+                    symbol: coin.symbol,
+                    imageUrl: coin.imageUrl,
+                    size: 32,
+                  ),
                   const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         coin.name,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text(
                         coin.symbol,
                         style: TextStyle(
                           fontSize: 12,
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                          color: Theme.of(context).colorScheme.onSurface
+                              .withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -76,13 +82,21 @@ class CoinDetailsScreen extends StatelessWidget {
                     final isSaved = watchlistState.isWatchlisted(coin.id);
                     return IconButton(
                       icon: Icon(
-                        isSaved ? Icons.star_rounded : Icons.star_border_rounded,
+                        isSaved
+                            ? Icons.star_rounded
+                            : Icons.star_border_rounded,
                         color: isSaved ? Colors.amber : null,
                         size: 26,
                       ),
                       onPressed: () {
-                        final allCoins = context.read<MarketCubit>().state.allCoins;
-                        context.read<WatchlistCubit>().toggleWatchlist(coin, allCoins);
+                        final allCoins = context
+                            .read<MarketCubit>()
+                            .state
+                            .allCoins;
+                        context.read<WatchlistCubit>().toggleWatchlist(
+                          coin,
+                          allCoins,
+                        );
                       },
                     );
                   },
@@ -94,13 +108,16 @@ class CoinDetailsScreen extends StatelessWidget {
         ),
         body: BlocBuilder<CoinDetailsCubit, CoinDetailsState>(
           builder: (context, state) {
-            if (state.status == CoinDetailsStatus.loading && state.details == null) {
+            if (state.status == CoinDetailsStatus.loading &&
+                state.details == null) {
               return _buildLoadingSkeleton();
             }
 
-            if (state.status == CoinDetailsStatus.error || state.details == null) {
+            if (state.status == CoinDetailsStatus.error ||
+                state.details == null) {
               return ErrorStateWidget(
-                onRetry: () => context.read<CoinDetailsCubit>().loadCoinDetails(coinId),
+                onRetry: () =>
+                    context.read<CoinDetailsCubit>().loadCoinDetails(coinId),
               );
             }
 
@@ -132,15 +149,20 @@ class CoinDetailsScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      PriceChangeChip(priceChangePercentage: coin.priceChangePercentage24h),
+                      PriceChangeChip(
+                        priceChangePercentage: coin.priceChangePercentage24h,
+                      ),
                     ],
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    state.selectedChartPoint != null ? 'Selected historical point' : 'Current Market Price',
+                    state.selectedChartPoint != null
+                        ? 'Selected historical point'
+                        : 'Current Market Price',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                      color: Theme.of(context).colorScheme.onSurface
+                          .withValues(alpha: 0.6),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -159,7 +181,10 @@ class CoinDetailsScreen extends StatelessWidget {
                   ChartPeriodSelector(
                     selectedPeriod: state.selectedPeriod,
                     onPeriodSelected: (period) {
-                      context.read<CoinDetailsCubit>().changePeriod(coin.id, period);
+                      context.read<CoinDetailsCubit>().changePeriod(
+                        coin.id,
+                        period,
+                      );
                     },
                   ),
                   const SizedBox(height: 28),
@@ -178,17 +203,23 @@ class CoinDetailsScreen extends StatelessWidget {
                     children: [
                       StatCard(
                         label: 'Market Cap',
-                        value: CurrencyFormatter.formatCompactCurrency(coin.marketCap),
+                        value: CurrencyFormatter.formatCompactCurrency(
+                          coin.marketCap,
+                        ),
                         icon: Icons.pie_chart_outline_rounded,
                       ),
                       StatCard(
                         label: '24h Trading Volume',
-                        value: CurrencyFormatter.formatCompactCurrency(coin.totalVolume),
+                        value: CurrencyFormatter.formatCompactCurrency(
+                          coin.totalVolume,
+                        ),
                         icon: Icons.bar_chart_rounded,
                       ),
                       StatCard(
                         label: '24h High',
-                        value: CurrencyFormatter.formatCurrency(details.high24h),
+                        value: CurrencyFormatter.formatCurrency(
+                          details.high24h,
+                        ),
                         icon: Icons.arrow_upward_rounded,
                       ),
                       StatCard(
@@ -245,7 +276,8 @@ class CoinDetailsScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14,
                         height: 1.5,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85),
+                        color: Theme.of(context).colorScheme.onSurface
+                            .withValues(alpha: 0.85),
                       ),
                     ),
                   ),
@@ -267,9 +299,17 @@ class CoinDetailsScreen extends StatelessWidget {
         children: [
           const SkeletonContainer(width: 180, height: 36),
           const SizedBox(height: 20),
-          const SkeletonContainer(width: double.infinity, height: 220, borderRadius: BorderRadius.all(Radius.circular(16))),
+          const SkeletonContainer(
+            width: double.infinity,
+            height: 220,
+            borderRadius: BorderRadius.all(Radius.circular(16)),
+          ),
           const SizedBox(height: 16),
-          const SkeletonContainer(width: double.infinity, height: 40, borderRadius: BorderRadius.all(Radius.circular(12))),
+          const SkeletonContainer(
+            width: double.infinity,
+            height: 40,
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
           const SizedBox(height: 28),
           const SkeletonContainer(width: 160, height: 20),
           const SizedBox(height: 12),
